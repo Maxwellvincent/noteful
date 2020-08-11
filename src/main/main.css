@@ -1,0 +1,16 @@
+header {
+    text-align: center;
+    background-color: cadetblue;
+}
+.main-component {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.left {
+    flex: .5;
+}
+
+.right {
+    flex: 2;
+}
