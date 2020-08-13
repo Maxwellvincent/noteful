@@ -1,7 +1,4 @@
-header {
-    text-align: center;
-    background-color: cadetblue;
-}
+
 .main-component {
     display: flex;
     flex-direction: row-reverse;

@@ -1,20 +1,41 @@
 import React from 'react';
-import {Link, NavLink} from 'react-router-dom';
-import { render } from '@testing-library/react';
+import {NavLink,} from 'react-router-dom';
+import './folder.css';
 
-export default class Folder extends React.Component{
-    constructor(props){
-        super(props)
-    }
+export default function Folder(match){
+        // console.log(match.match.params.id);
+        // console.log(match.notes)
+        const folders = match.folders.map((folder,index) => {
+            
+        return <div key={index}> <NavLink to={`/folder/${folder.id}`} >{folder.name}</NavLink>
+            </div>
+            
+        });
 
-    render() {
-        
-        
+        const notes = match.notes.filter((note) => { return note.folderId === match.match.params.id});
+        const filterNotes = notes.map((note) => { 
+            return ( <div key={note.id}>
+                <NavLink to={`/note/${note.id}`}><h2>{note.name}</h2></NavLink>
+                <span>{note.modified}</span>
+            </div>
+            )
+        });
+
+
         return (
             <div>
-                <NavLink to='/folder'>{this.props.name}</NavLink>
+                <div className="main-component" >
+                <div className="right">
+                    <main>
+                        {filterNotes}
+                    </main>
+                </div>
+                <div className="left">
+                    <aside>{folders}</aside>
+                </div>
+            </div>
             </div>
         )
-    }
+
 
 }
