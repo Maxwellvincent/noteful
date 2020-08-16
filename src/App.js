@@ -1,110 +1,104 @@
-import React from 'react';
-import Main from '../src/main/main';
-import Folder from '../src/folder/folder';
-import Note from '../src/note/note';
-import {Route, Switch,Link} from 'react-router-dom';
-import {NoteContext} from './noteContext';
-import Store from './dummy-store';
+import React, {Component} from 'react';
+import {Route, Link} from 'react-router-dom';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import { faCheckSquare, faCoffee } from '@fortawesome/fontawesome-free-solid'
+import NoteListNav from '../src/NoteListNav/NoteListNav.js';
+import NotePageNav from '../src/NotePageNav/NotePageNav';
+import NoteListMain from '../src/NoteListMain/NoteListMain';
+import NotePageMain from '../src/NotePageMain/NotePageMain';
+import ApiContext from './ApiContext';
+// import config from '../config';
 import './App.css';
 
-export class App extends React.Component {
-  state = {
-    notes: [],
-    folders: []
-  };
-
-  componentDidMount(){
-    const folders = 'http://localhost:9090/folders';
-    const notes = 'http://localhost:9090/notes';
-    // const options = {
-    //   method: 'GET',
-    //   headers: {
-    //     'content-type':'application/json'
-    //   },
-    // }
-    
-    Promise.all([
-      fetch(folders),
-      fetch(notes)
-    ])
-    .then(([notesRes, foldersResp]) => {
-      if(!notesRes.ok)
-        return notesRes.json().then(e => Promise.reject(e));
-      if(!foldersResp.ok)
-        return foldersResp.json().then(e => Promise.reject(e));
-      return Promise.all([notesRes.json(), foldersResp.json()]);
-    })
-    .then(([files,docs]) => {
-      this.setState({folders:files,notes:docs});
-    })
-    .catch(error => {
-      console.error({error});
-    })
-
-  }
-
-
-
-
-  renderMainRoutes() {
-    return (
-        <>
-            {['/', '/folder/:folderId'].map(path => (
-                <Route
-                    exact
-                    key={path}
-                    path={path}
-                    component={NoteListMain}
-                />
-            ))}
-            <Route path="/note/:noteId" component={NotePageMain} />
-        </>
-    );
-}
-
-
-  render() {
-    
-    const value = {
-      notes: this.state.notes,
-      folders: this.state.folders
-
+class App extends Component {
+    state = {
+        notes: [],
+        folders: []
     };
-    
-    return (
-  
-        <NoteContext.Provider value={value}>
-          <div className="App">
 
-            <header>
-              <h1>
-                <Link to='/'>Noteful</Link>
-              </h1>
-            </header>
-            <main>
-              {this.renderMainRoutes()}
-              {/* <Switch>
-                <Route exact path='/' component={Main} 
-                  // render={() => <Main notes={notes} folders={folders}/>}
-                />
-          
-                <Route path="/folder/:id" 
-                  component={Folder}
-                  // render={({match}) => <Folder notes={notes} match={match} folders={folders}/>}
-                  />
+    componentDidMount() {
+        Promise.all([
+            fetch(`http://localhost:9090/notes`),
+            fetch(`http://localhost:9090/folders`)
+        ])
+            .then(([notesRes, foldersRes]) => {
+                if (!notesRes.ok)
+                    return notesRes.json().then(e => Promise.reject(e));
+                if (!foldersRes.ok)
+                    return foldersRes.json().then(e => Promise.reject(e));
 
-                <Route path="/note/:id" component={Note} 
-                  // render={({match}) => <Note notes={notes} match={match} folder={folders}/>}
-                  />
-              </Switch> */}
+                return Promise.all([notesRes.json(), foldersRes.json()]);
+            })
+            .then(([notes, folders]) => {
+                this.setState({notes, folders});
+            })
+            .catch(error => {
+                console.error({error});
+            });
+    }
 
-            </main>
+    handleDeleteNote = noteId => {
+        this.setState({
+            notes: this.state.notes.filter(note => note.id !== noteId)
+        });
+    };
 
-          </div>
-        </NoteContext.Provider>
-    );
+    renderNavRoutes() {
+        return (
+            <>
+                {['/', '/folder/:folderId'].map(path => (
+                    <Route
+                        exact
+                        key={path}
+                        path={path}
+                        component={NoteListNav}
+                    />
+                ))}
+                <Route path="/note/:noteId" component={NotePageNav} />
+                <Route path="/add-folder" component={NotePageNav} />
+                <Route path="/add-note" component={NotePageNav} />
+            </>
+        );
+    }
 
-  }
+    renderMainRoutes() {
+        return (
+            <>
+                {['/', '/folder/:folderId'].map(path => (
+                    <Route
+                        exact
+                        key={path}
+                        path={path}
+                        component={NoteListMain}
+                    />
+                ))}
+                <Route path="/note/:noteId" component={NotePageMain} />
+            </>
+        );
+    }
 
+    render() {
+        const value = {
+            notes: this.state.notes,
+            folders: this.state.folders,
+            deleteNote: this.handleDeleteNote
+        };
+        return (
+            <ApiContext.Provider value={value}>
+                <div className="App">
+                    <nav className="App__nav">{this.renderNavRoutes()}</nav>
+                    <header className="App__header">
+                        <h1>
+                            <Link to="/">Noteful</Link>{' '}
+                            <FontAwesomeIcon icon="check-double" />
+                        </h1>
+                    </header>
+                    <main className="App__main">{this.renderMainRoutes()}</main>
+                </div>
+            </ApiContext.Provider>
+        );
+    }
 }
+
+export default App;
 

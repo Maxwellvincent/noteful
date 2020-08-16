@@ -1,6 +1,6 @@
 import React from 'react';
 import {NavLink,} from 'react-router-dom';
-import {NoteContext} from '../noteContext';
+import ApiContext from '../ApiContext';
 import './folder.css';
 
 export default function Folder(match){
@@ -25,7 +25,7 @@ export default function Folder(match){
 
         return (
                 <div>
-                    <NoteContext.Consumer>
+                    <ApiContext.Consumer>
                         {context => (
                                 <div className="main-component" >
                                 <div className="right">
@@ -42,7 +42,7 @@ export default function Folder(match){
                             </div>
                         )}
 
-                    </NoteContext.Consumer>
+                    </ApiContext.Consumer>
 
                 </div>
           
