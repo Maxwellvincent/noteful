@@ -8,64 +8,100 @@ import Store from './dummy-store';
 import './App.css';
 
 export class App extends React.Component {
-  constructor(props){
-    super(props)
-    // this.state = {Store}
-    this.state = {
-      Store: {
-        folders: [],
-        notes: [],}
-    }
-  }
+  state = {
+    notes: [],
+    folders: []
+  };
 
   componentDidMount(){
     const folders = 'http://localhost:9090/folders';
     const notes = 'http://localhost:9090/notes';
-    const options = {
-      method: 'GET',
-      headers: {
-        'content-type':'application/json'
-      },
-    }
+    // const options = {
+    //   method: 'GET',
+    //   headers: {
+    //     'content-type':'application/json'
+    //   },
+    // }
     
-    
-
     Promise.all([
-      fetch(folders,options),
-      fetch(notes,options)
-    ]).then(resp => (Promise.all(resp.map((resp) => resp.json()))))
-    .then((data) => this.setState({Store:data}))
+      fetch(folders),
+      fetch(notes)
+    ])
+    .then(([notesRes, foldersResp]) => {
+      if(!notesRes.ok)
+        return notesRes.json().then(e => Promise.reject(e));
+      if(!foldersResp.ok)
+        return foldersResp.json().then(e => Promise.reject(e));
+      return Promise.all([notesRes.json(), foldersResp.json()]);
+    })
+    .then(([files,docs]) => {
+      this.setState({folders:files,notes:docs});
+    })
+    .catch(error => {
+      console.error({error});
+    })
+
   }
+
+
+
+
+  renderMainRoutes() {
+    return (
+        <>
+            {['/', '/folder/:folderId'].map(path => (
+                <Route
+                    exact
+                    key={path}
+                    path={path}
+                    component={NoteListMain}
+                />
+            ))}
+            <Route path="/note/:noteId" component={NotePageMain} />
+        </>
+    );
+}
 
 
   render() {
     
-    const {notes, folders} = this.state.Store;
-    console.log(this.state.Store)
+    const value = {
+      notes: this.state.notes,
+      folders: this.state.folders
+
+    };
+    
     return (
-      <div className="App">
-        <NoteContext.Provider value={{store: this.state.Store}}>
-          <header><h1><Link to='/'>Noteful</Link></h1></header>
-          <main>
-            <Switch>
-              <Route exact path='/' component={Main} 
-                // render={() => <Main notes={notes} folders={folders}/>}
-              />
-        
-              <Route path="/folder/:id" 
-                component={Folder}
-                // render={({match}) => <Folder notes={notes} match={match} folders={folders}/>}
+  
+        <NoteContext.Provider value={value}>
+          <div className="App">
+
+            <header>
+              <h1>
+                <Link to='/'>Noteful</Link>
+              </h1>
+            </header>
+            <main>
+              {this.renderMainRoutes()}
+              {/* <Switch>
+                <Route exact path='/' component={Main} 
+                  // render={() => <Main notes={notes} folders={folders}/>}
                 />
+          
+                <Route path="/folder/:id" 
+                  component={Folder}
+                  // render={({match}) => <Folder notes={notes} match={match} folders={folders}/>}
+                  />
 
-              <Route path="/note/:id" component={Note} 
-                // render={({match}) => <Note notes={notes} match={match} folder={folders}/>}
-                />
-            </Switch>
+                <Route path="/note/:id" component={Note} 
+                  // render={({match}) => <Note notes={notes} match={match} folder={folders}/>}
+                  />
+              </Switch> */}
 
-          </main>
+            </main>
 
+          </div>
         </NoteContext.Provider>
-      </div>
     );
 
   }
