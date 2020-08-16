@@ -1,5 +1,6 @@
 import React from 'react';
 import {NavLink,} from 'react-router-dom';
+import {NoteContext} from '../noteContext';
 import './folder.css';
 
 export default function Folder(match){
@@ -23,19 +24,27 @@ export default function Folder(match){
 
 
         return (
-            <div>
-                <div className="main-component" >
-                <div className="right">
-                    <main>
-                        {filterNotes}
-                    </main>
+                <div>
+                    <NoteContext.Consumer>
+                        {context => (
+                                <div className="main-component" >
+                                <div className="right">
+                                    <main>
+                                        
+                                        {filterNotes}
+                                    </main>
+                                </div>
+                                <div className="left">
+                                    <aside>
+                                        {folders}    
+                                    </aside>
+                                </div>
+                            </div>
+                        )}
+
+                    </NoteContext.Consumer>
+
                 </div>
-                <div className="left">
-                    <aside>{folders}</aside>
-                </div>
-            </div>
-            </div>
+          
         )
-
-
 }
