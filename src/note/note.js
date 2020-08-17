@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheckSquare, faCoffee } from '@fortawesome/fontawesome-free-solid'
 import ApiContext from '../ApiContext'
 // import config from '../config'
-import './Note.css'
+import '../Note/Note.css'
 
 export default class Note extends React.Component {
   static defaultProps ={

@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import {Route, Link} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import { faCheckSquare, faCoffee } from '@fortawesome/fontawesome-free-solid'
 import NoteListNav from '../src/NoteListNav/NoteListNav.js';
 import NotePageNav from '../src/NotePageNav/NotePageNav';
 import NoteListMain from '../src/NoteListMain/NoteListMain';
 import NotePageMain from '../src/NotePageMain/NotePageMain';
+import AddFolder from './AddFolder/AddFolder';
 import ApiContext from './ApiContext';
 // import config from '../config';
 import './App.css';
@@ -73,6 +73,7 @@ class App extends Component {
                     />
                 ))}
                 <Route path="/note/:noteId" component={NotePageMain} />
+                <Route path="/add-folder" component={AddFolder}/>
             </>
         );
     }
