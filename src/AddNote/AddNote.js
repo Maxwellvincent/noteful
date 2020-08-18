@@ -7,10 +7,12 @@ class AddNote extends React.Component {
     state= {
         name: '',
         content: '',
-        folders: []
+        folders: [],
+        touched: false,
+        folderId: ''
     }
 
-    textChange = (e) => {
+    nameChange = (e) => {
         console.log(e.target.value);
         this.setState({
             name: e.target.value
@@ -24,26 +26,31 @@ class AddNote extends React.Component {
         })
     }
 
+    folderChange = (e) => {
+        console.log(e.target);
+        this.setState({
+            folderId: e.target.value
+        })
+    }
+
     handleSubmit = (e) => {
         e.preventDefault()
         
-        const text = this.state.text;
+        const text = this.state.name;
         // create a fetch post here
         fetch(`http://localhost:9090/notes`, {
             method: 'POST',
-            header: {
+            headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                id: '', 
+            body: JSON.stringify({ 
                 name: text,
                 modified: new Date(),
                 folderId : '',
                 content: ''
             })
         })
-        .then(resp => resp.json())
-        .then(data => console.log(data))
+        .then(resp => console.log(resp))
         // grab this forms state and sent it to the fetch
         // then set this state back to empty
         // need to update the state of the app with new folder added 
@@ -57,23 +64,24 @@ class AddNote extends React.Component {
         return (
             <ApiContext.Consumer>
                 {(value) => (
-                            console.log(value.folders),
+                            // console.log(value.folders)
                         <form onSubmit={this.handleSubmit}>
                             <h2>Create a New Note</h2>
                             <div>
                                 <label>Name: </label>
                                 <input 
                                     type="text" 
-                                    value={this.state.text} 
-                                    onChange={this.textChange}
+                                    value={this.state.name} 
+                                    onChange={this.nameChange}
                                 />
                             </div>
 
                             <div>
                                 <label>Folders: </label>
-                                <select>
+                                <select onChange={this.folderChange}>
                                 {value.folders.map((item) => (
-                                    <option>{item.name}</option>
+                                    // console.log(item.id)
+                                    <option id={item.id}>{item.name}</option>
                                 ))}
                                 </select>
                             </div>

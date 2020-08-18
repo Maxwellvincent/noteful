@@ -8,8 +8,9 @@ import NotePageMain from '../src/NotePageMain/NotePageMain';
 import AddFolder from './AddFolder/AddFolder';
 import AddNote from './AddNote/AddNote';
 import ApiContext from './ApiContext';
-// import config from '../config';
+import ErrorBoundaries from './ErrorBoundaries/ErrorBoundaries';
 import './App.css';
+
 
 class App extends Component {
     state = {
@@ -17,7 +18,7 @@ class App extends Component {
         folders: []
     };
 
-    componentDidMount() {
+    getData = () => {
         Promise.all([
             fetch(`http://localhost:9090/notes`),
             fetch(`http://localhost:9090/folders`)
@@ -36,6 +37,15 @@ class App extends Component {
             .catch(error => {
                 console.error({error});
             });
+    }
+
+    componentDidMount() {
+        this.getData();
+    }
+
+    componentDidUpdate(pP,pS) {
+        if(pS === this.state)
+        this.setState(this.state)
     }
 
     handleDeleteNote = noteId => {
@@ -84,20 +94,23 @@ class App extends Component {
         const value = {
             notes: this.state.notes,
             folders: this.state.folders,
-            deleteNote: this.handleDeleteNote
+            deleteNote: this.handleDeleteNote,
+            
         };
         return (
             <ApiContext.Provider value={value}>
-                <div className="App">
-                    <nav className="App__nav">{this.renderNavRoutes()}</nav>
-                    <header className="App__header">
-                        <h1>
-                            <Link to="/">Noteful</Link>{' '}
-                            <FontAwesomeIcon icon="check-double" />
-                        </h1>
-                    </header>
-                    <main className="App__main">{this.renderMainRoutes()}</main>
-                </div>
+                <ErrorBoundaries>
+                    <div className="App">
+                        <nav className="App__nav">{this.renderNavRoutes()}</nav>
+                        <header className="App__header">
+                            <h1>
+                                <Link to="/">Noteful</Link>{' '}
+                                <FontAwesomeIcon icon="check-double" />
+                            </h1>
+                        </header>
+                        <main className="App__main">{this.renderMainRoutes()}</main>
+                    </div>
+                </ErrorBoundaries>
             </ApiContext.Provider>
         );
     }
