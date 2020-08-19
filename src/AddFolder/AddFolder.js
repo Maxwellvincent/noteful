@@ -49,8 +49,8 @@ class AddFolder extends React.Component {
         })
         .then(resp => resp.json())
         .then(data => 
-            value.folders.push(data)
-            // console.log(data)
+            
+            console.log(data)
             )
         // grab this forms state and sent it to the fetch
         // then set this state back to empty
