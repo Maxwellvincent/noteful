@@ -44,8 +44,7 @@ class App extends Component {
     }
 
     componentDidUpdate(pP,pS) {
-        if(pS === this.state)
-        this.setState(this.state)
+        // this.getData();
     }
 
     handleDeleteNote = noteId => {
@@ -72,7 +71,7 @@ class App extends Component {
         );
     }
 
-    renderMainRoutes() {
+    renderMainRoutes(value) {
         return (
             <>
                 {['/', '/folder/:folderId'].map(path => (
@@ -83,9 +82,9 @@ class App extends Component {
                         component={NoteListMain}
                     />
                 ))}
-                <Route path="/note/:noteId" component={NotePageMain} />
-                <Route path="/add-folder" component={AddFolder}/>
-                <Route path="/add-note" component={AddNote}/>
+                <Route path="/note/:noteId" value={value} component={NotePageMain} />
+                <Route path="/add-folder" value={value} component={AddFolder}/>
+                <Route path="/add-note" value={value} component={AddNote}/>
             </>
         );
     }
@@ -108,7 +107,7 @@ class App extends Component {
                                 <FontAwesomeIcon icon="check-double" />
                             </h1>
                         </header>
-                        <main className="App__main">{this.renderMainRoutes()}</main>
+                        <main className="App__main">{this.renderMainRoutes(value)}</main>
                     </div>
                 </ErrorBoundaries>
             </ApiContext.Provider>

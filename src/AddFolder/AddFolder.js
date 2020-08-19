@@ -7,8 +7,10 @@ class AddFolder extends React.Component {
         super(props)
         this.state = {
             name: '',
-            touched: false
+            touched: false,
+            folders: []
         }
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     textChange = (e) => {
@@ -31,8 +33,11 @@ class AddFolder extends React.Component {
 
     
 
-    handleSubmit = (e) => {
-        e.preventDefault()
+    handleSubmit(e, value){
+        console.log(value);
+
+        e.preventDefault();
+
         console.log(this.props);
         // create a fetch post here
         fetch(`http://localhost:9090/folders`, {
@@ -43,7 +48,10 @@ class AddFolder extends React.Component {
             body: JSON.stringify({id: '', name: this.state.name})
         })
         .then(resp => resp.json())
-        .then(data => console.log(data))
+        .then(data => 
+            value.folders.push(data)
+            // console.log(data)
+            )
         // grab this forms state and sent it to the fetch
         // then set this state back to empty
         // need to update the state of the app with new folder added 
@@ -52,6 +60,7 @@ class AddFolder extends React.Component {
         
         // Currently works to return
         this.props.history.push('/');
+      
     }
 
     render(){
@@ -60,7 +69,7 @@ class AddFolder extends React.Component {
             <ApiContext.Consumer>
                 {value => 
                        
-                    <form onSubmit={this.handleSubmit}>
+                    <form onSubmit={(e) => this.handleSubmit(e,value)}>
                         <h2>Create a New Folder</h2>
                         <label>Folder Name:</label>
                         <input type="text" value={this.state.name} onChange={this.textChange}/>
