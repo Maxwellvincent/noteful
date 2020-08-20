@@ -12,6 +12,8 @@ class AddNote extends React.Component {
         folderId: ''
     }
 
+    static contextType = ApiContext;
+
     nameChange = (e) => {
         console.log(e.target.value);
         this.setState({
@@ -27,9 +29,10 @@ class AddNote extends React.Component {
     }
 
     folderChange = (e) => {
-        console.log(e.target);
+        const option = Array.from(e.target.options).filter((item) => item.innerText === e.target.value);
+        console.log(option);
         this.setState({
-            folderId: e.target.value
+            folderId: option[0].id
         })
     }
 
@@ -46,16 +49,17 @@ class AddNote extends React.Component {
             body: JSON.stringify({ 
                 name: text,
                 modified: new Date(),
-                folderId : '',
-                content: ''
+                folderId : this.state.folderId,
+                content: this.state.content
             })
         })
-        .then(resp => console.log(resp))
+        .then(resp => resp.json())
+        .then(data => console.log(data))
         // grab this forms state and sent it to the fetch
         // then set this state back to empty
         // need to update the state of the app with new folder added 
         // then need to return back to the folder list
-
+        this.context.apiCall();
         // Currently works to return
         this.props.history.push('/');
     }

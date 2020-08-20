@@ -13,6 +13,8 @@ class AddFolder extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    static contextType = ApiContext;
+
     textChange = (e) => {
         console.log(e.target.value);
         this.setState({
@@ -56,7 +58,7 @@ class AddFolder extends React.Component {
         // then set this state back to empty
         // need to update the state of the app with new folder added 
         // then need to return back to the folder list
-        console.log(this.props);
+        this.context.apiCall()
         
         // Currently works to return
         this.props.history.push('/');
@@ -64,7 +66,7 @@ class AddFolder extends React.Component {
     }
 
     render(){
-       
+       console.log(this.context);
         return (
             <ApiContext.Consumer>
                 {value => 

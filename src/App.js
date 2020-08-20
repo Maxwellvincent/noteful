@@ -94,6 +94,7 @@ class App extends Component {
             notes: this.state.notes,
             folders: this.state.folders,
             deleteNote: this.handleDeleteNote,
+            apiCall: this.getData,
             
         };
         return (
