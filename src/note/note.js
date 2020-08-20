@@ -3,9 +3,12 @@ import { Link } from 'react-router-dom'
 import { format } from 'date-fns'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheckSquare, faCoffee } from '@fortawesome/fontawesome-free-solid'
+import fontawesome from '@fortawesome/fontawesome'
 import ApiContext from '../ApiContext'
 // import config from '../config'
 import '../Note/Note.css'
+
+fontawesome.library.add(faCheckSquare, faCoffee);
 
 export default class Note extends React.Component {
   static defaultProps ={
@@ -13,11 +16,13 @@ export default class Note extends React.Component {
   }
   static contextType = ApiContext;
 
-  handleClickDelete = e => {
-    e.preventDefault()
-    const noteId = this.props.id
 
-    fetch(`http://localhost:1234/notes/${noteId}`, {
+  handleClickDelete = (e) => {
+    
+    e.preventDefault();
+    const noteId = this.props.id
+    // console.log(noteId);
+    fetch(`http://localhost:9090/notes/${noteId}`, {
       method: 'DELETE',
       headers: {
         'content-type': 'application/json'
@@ -28,7 +33,8 @@ export default class Note extends React.Component {
           return res.json().then(e => Promise.reject(e))
         return res.json()
       })
-      .then(() => {
+      .then(data => {
+        // console.log(data)
         this.context.deleteNote(noteId)
         // allow parent to perform extra behaviour
         this.props.onDeleteNote(noteId)
@@ -39,6 +45,7 @@ export default class Note extends React.Component {
   }
 
   render() {
+    
     const { name, id, modified } = this.props
     return (
       <div className='Note'>
@@ -50,7 +57,7 @@ export default class Note extends React.Component {
         <button
           className='Note__delete'
           type='button'
-          onClick={this.handleClickDelete}
+          onClick={(e) => this.handleClickDelete(e)}
         >
           <FontAwesomeIcon 
           icon='trash-alt' 

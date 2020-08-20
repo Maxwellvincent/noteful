@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {Route, Link} from 'react-router-dom';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+// import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import fontawesome from '@fortawesome/fontawesome';
+import { faCheckSquare, faCoffee, faCheck } from '@fortawesome/fontawesome-free-solid'
 import NoteListNav from '../src/NoteListNav/NoteListNav.js';
 import NotePageNav from '../src/NotePageNav/NotePageNav';
 import NoteListMain from '../src/NoteListMain/NoteListMain';
@@ -11,6 +13,7 @@ import ApiContext from './ApiContext';
 import ErrorBoundaries from './ErrorBoundaries/ErrorBoundaries';
 import './App.css';
 
+fontawesome.library.add(faCheckSquare, faCoffee, faCheck);
 
 class App extends Component {
     state = {
@@ -105,7 +108,7 @@ class App extends Component {
                         <header className="App__header">
                             <h1>
                                 <Link to="/">Noteful</Link>{' '}
-                                <FontAwesomeIcon icon="check-double" />
+                                {/* <FontAwesomeIcon icon="check-double" /> */}
                             </h1>
                         </header>
                         <main className="App__main">{this.renderMainRoutes(value)}</main>

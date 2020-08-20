@@ -1,14 +1,14 @@
 import React from 'react';
 import ApiContext from '../ApiContext';
-import ValidationError from '../ValidationError/ValidationError';
-
+// import ValidationError from '../ValidationError/ValidationError';
+import PropTypes from 'prop-types';
 
 class AddNote extends React.Component {
 
     state= {
         name: '',
         content: '',
-        folders: [0],
+        folders: [],
         touched: false,
         folderId: ''
     }
@@ -67,6 +67,7 @@ class AddNote extends React.Component {
             })
             .then(resp => resp.json())
             .then(data => console.log(data))
+            .catch(error => console.log(error.message))
             // grab this forms state and sent it to the fetch
             // then set this state back to empty
             // need to update the state of the app with new folder added 
@@ -104,12 +105,13 @@ class AddNote extends React.Component {
 
                             <div>
                                 <label htmlFor="folders">Folders: </label>
-                                <select id="folders" onChange={this.folderChange}>
+                                <select id="folders" onChange={this.folderChange} aria-required="true" aria-describedby="folder-div" >
                                 {value.folders.map((item) => (
                                     // console.log(item.id)
                                     <option id={item.id}>{item.name}</option>
                                 ))}
                                 </select>
+                                <div id="folder-div"> Please selecte a folder</div>
                             </div>
                             
                             <div>
@@ -136,4 +138,9 @@ class AddNote extends React.Component {
     }
 }
 
+AddNote.propTypes = {
+    name: PropTypes.string.isRequired,
+    content: PropTypes.string,
+
+}
 export default AddNote;

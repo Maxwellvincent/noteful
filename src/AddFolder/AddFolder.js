@@ -1,6 +1,7 @@
 import React from 'react';
 import ApiContext from '../ApiContext';
-import ValidationError from '../ValidationError/ValidationError';
+import PropTypes from 'prop-types';
+// import ValidationError from '../ValidationError/ValidationError';
 
 class AddFolder extends React.Component {
     constructor(props){
@@ -36,7 +37,7 @@ class AddFolder extends React.Component {
     
 
     handleSubmit(e, value){
-        console.log(value);
+        // console.log(value);
 
         e.preventDefault();
         if(this.state.name !== ""){
@@ -54,6 +55,7 @@ class AddFolder extends React.Component {
                 
                 console.log(data)
                 )
+                .catch(error => console.log(error.message))
             // grab this forms state and sent it to the fetch
             // then set this state back to empty
             // need to update the state of the app with new folder added 
@@ -70,7 +72,7 @@ class AddFolder extends React.Component {
     }
 
     render(){
-       console.log(this.context);
+    //    console.log(this.context);
         return (
             <ApiContext.Consumer>
                 {value => 
@@ -93,6 +95,10 @@ class AddFolder extends React.Component {
 
         )
     }
+}
+
+AddFolder.propTypes = {
+    name: PropTypes.string.isRequired
 }
 
 export default AddFolder;
