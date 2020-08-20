@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import PropType from 'prop-types';
 export default class ErrorBoundary extends Component {
     constructor(props) {
         super(props);
@@ -18,6 +18,7 @@ export default class ErrorBoundary extends Component {
     // }
 
     render() {
+        console.log(this.props);
         if(this.state.hasError) {
             return (
                 <>
@@ -27,4 +28,8 @@ export default class ErrorBoundary extends Component {
         return this.props.children;
 
     }
+}
+
+ErrorBoundary.propTypes = {
+    hasError: PropType.bool
 }

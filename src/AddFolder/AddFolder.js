@@ -26,7 +26,7 @@ class AddFolder extends React.Component {
     validateName() {
         const name = this.state.name.trim();
         if (name.length === 0) {
-            return 'Name is required';
+            return `Name is required`;
         } else if (name.length < 3) {
             return 'Name must be at least 3 characters long!'
         }
@@ -39,29 +39,33 @@ class AddFolder extends React.Component {
         console.log(value);
 
         e.preventDefault();
-
-        console.log(this.props);
-        // create a fetch post here
-        fetch(`http://localhost:9090/folders`, {
-            method: 'POST',
-            headers: {
-                "Content-Type": 'application/json'
-            },
-            body: JSON.stringify({id: '', name: this.state.name})
-        })
-        .then(resp => resp.json())
-        .then(data => 
+        if(this.state.name !== ""){
+            console.log(this.props);
+            // create a fetch post here
+            fetch(`http://localhost:9090/folders`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": 'application/json'
+                },
+                body: JSON.stringify({id: '', name: this.state.name})
+            })
+            .then(resp => resp.json())
+            .then(data => 
+                
+                console.log(data)
+                )
+            // grab this forms state and sent it to the fetch
+            // then set this state back to empty
+            // need to update the state of the app with new folder added 
+            // then need to return back to the folder list
+            this.context.apiCall()
             
-            console.log(data)
-            )
-        // grab this forms state and sent it to the fetch
-        // then set this state back to empty
-        // need to update the state of the app with new folder added 
-        // then need to return back to the folder list
-        this.context.apiCall()
-        
-        // Currently works to return
-        this.props.history.push('/');
+            // Currently works to return
+            this.props.history.push('/');
+        } else {
+            alert("Please enter name for the folder");
+        }
+
       
     }
 
@@ -75,8 +79,10 @@ class AddFolder extends React.Component {
                         <h2>Create a New Folder</h2>
                         <label>Folder Name:</label>
                         <input type="text" value={this.state.name} onChange={this.textChange}/>
+                        
                         {/* {this.state.touched && (<ValidationError message={this.validateName()}/>)} */}
                         <button type="submit" >Submit</button>
+                        {this.state.touched ?  this.validateName() : null}
                     </form>
                 
                 }
