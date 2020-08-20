@@ -89,19 +89,22 @@ class AddNote extends React.Component {
                         <form onSubmit={this.handleSubmit}>
                             <h2>Create a New Note</h2>
                             <div>
-                                <label>Name: </label>
-                                <input 
+                                <label htmlFor="name">Name: </label>
+                                <input
+                                    id="name" 
                                     type="text" 
                                     value={this.state.name} 
                                     onChange={this.nameChange}
+                                    aria-label="Name for note" 
+                                    aria-required="true" 
                                 />
                                 
                                 {this.state.touched ? this.validateName(): null}
                             </div>
 
                             <div>
-                                <label>Folders: </label>
-                                <select onChange={this.folderChange}>
+                                <label htmlFor="folders">Folders: </label>
+                                <select id="folders" onChange={this.folderChange}>
                                 {value.folders.map((item) => (
                                     // console.log(item.id)
                                     <option id={item.id}>{item.name}</option>
@@ -110,12 +113,17 @@ class AddNote extends React.Component {
                             </div>
                             
                             <div>
-                                <label>Content: </label>
+                                <label htmlFor="content">Content: </label>
                                 <input 
-                                    type='text' 
+                                    id="content"
+                                    type='text'
+                                    aria-label="text for content" 
+                                    aria-required="true" 
+                                    aria-describedby="content-div" 
                                     value={this.state.content} 
                                     onChange={this.contentChange}
                                 />
+                                <div id="content-div"> Please enter text content for note</div>
                                 <button type="submit">Submit</button>
                             </div>
 
